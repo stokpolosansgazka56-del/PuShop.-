@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PuDownload - TikTok Downloader</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬇️</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 40px 35px;
+            max-width: 640px;
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 8px;
+        }
+        .logo {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 24px;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+        }
+        .title-group h1 {
+            color: #fff;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .title-group h1 span {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: #b9b3d6;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin: 28px 0 20px;
+        }
+        input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 15px;
+            outline: 2px solid transparent;
+            transition: 0.3s;
+        }
+        input:focus {
+            background: rgba(255,255,255,0.15);
+            outline-color: #8b5cf6;
+        }
+        input::placeholder { color: #9a94b8; }
+        button {
+            padding: 15px 32px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 20px rgba(107, 70, 193, 0.35);
+        }
+        button:hover { transform: scale(1.03); box-shadow: 0 10px 30px rgba(107, 70, 193, 0.5); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .loader { display: none; text-align: center; color: #c4bcdb; margin: 25px 0; }
+        .loader.active { display: block; }
+        .spinner {
+            width: 44px; height: 44px;
+            border: 4px solid rgba(255,255,255,0.08);
+            border-top-color: #a78bfa;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .result {
+            display: none;
+            margin-top: 28px;
+            padding: 18px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 18px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .result.active { display: block; }
+        .result video {
+            width: 100%;
+            max-height: 420px;
+            border-radius: 14px;
+            background: #000;
+            margin-bottom: 14px;
+        }
+        .info {
+            color: #d1cbe8;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .info strong { color: #fff; }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-group a {
+            padding: 12px 26px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-video {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
+        }
+        .btn-video:hover { transform: scale(1.04); box-shadow: 0 8px 28px rgba(16, 185, 129, 0.4); }
+        .btn-music {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.3);
+        }
+        .btn-music:hover { transform: scale(1.04); box-shadow: 0 8px 28px rgba(245, 158, 11, 0.4); }
+        .error {
+            display: none;
+            color: #fca5a5;
+            text-align: center;
+            margin-top: 18px;
+            padding: 14px;
+            background: rgba(239, 68, 68, 0.12);
+            border-radius: 14px;
+            border-left: 4px solid #ef4444;
+        }
+        .error.active { display: block; }
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            color: #6b6390;
+            font-size: 13px;
+        }
+        .footer a {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        @media (max-width: 550px) {
+            .container { padding: 25px 20px; }
+            .header { gap: 10px; }
+            .logo { width: 42px; height: 42px; font-size: 20px; }
+            .title-group h1 { font-size: 24px; }
+            .input-group { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">PD</div>
+            <div class="title-group">
+                <h1>Pu<span>Download</span></h1>
+                <div class="subtitle">⬇️ Download TikTok Video &amp; Audio Tanpa Watermark</div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Tempel link TikTok di sini...">
+            <button id="downloadBtn">Proses</button>
+        </div>
+
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>Sedang mengambil data...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="result" id="result">
+            <video id="videoPreview" controls></video>
+            <div class="info" id="videoInfo"></div>
+            <div class="btn-group">
+                <a href="#" class="btn-video" id="downloadVideo" download>📹 Download Video</a>
+                <a href="#" class="btn-music" id="downloadMusic" download>🎵 Download Audio</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <span>⚡ PuDownload &bull; by <a href="#">PUTZX</a></span>
+        </div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loader = document.getElementById('loader');
+        const result = document.getElementById('result');
+        const error = document.getElementById('error');
+        const videoPreview = document.getElementById('videoPreview');
+        const videoInfo = document.getElementById('videoInfo');
+        const downloadVideo = document.getElementById('downloadVideo');
+        const downloadMusic = document.getElementById('downloadMusic');
+
+        downloadBtn.addEventListener('click', async () => {
+            const url = urlInput.value.trim();
+            if (!url) {
+                showError('Masukkan URL TikTok terlebih dahulu!');
+                return;
+            }
+
+            result.classList.remove('active');
+            error.classList.remove('active');
+            loader.classList.add('active');
+            downloadBtn.disabled = true;
+
+            try {
+                // Gunakan API pihak ketiga (gratis)
+                const apiUrl = `https://tikxedd.vercel.app/api/resolve?url=${encodeURIComponent(url)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data && data.download && data.download.noWatermark) {
+                    const videoUrl = data.download.noWatermark;
+                    const musicUrl = data.download.music || videoUrl;
+                    const title = data.title || 'TikTok Video';
+                    const author = data.author || 'Unknown';
+
+                    videoPreview.src = videoUrl;
+                    videoInfo.innerHTML = `
+                        <strong>${title}</strong><br>
+                        👤 ${author}
+                    `;
+                    downloadVideo.href = videoUrl;
+                    downloadMusic.href = musicUrl;
+                    result.classList.add('active');
+                } else {
+                    showError('Gagal mendapatkan link video. Pastikan URL benar dan publik.');
+                }
+            } catch (err) {
+                showError('Terjadi kesalahan: ' + err.message);
+            } finally {
+                loader.classList.remove('active');
+                downloadBtn.disabled = false;
+            }
+        });
+
+        function showError(msg) {
+            error.textContent = '❌ ' + msg;
+            error.classList.add('active');
+        }
+
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') downloadBtn.click();
+        });
+    </script>
+</body>
+</html>

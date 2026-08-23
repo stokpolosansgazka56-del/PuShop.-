@@ -1,0 +1,19 @@
+<% title = 'Pengaturan Toko' %>
+<%- include('../layout', { body: `
+  <h1>Pengaturan Toko</h1>
+  <form action="/admin/settings?_method=PUT" method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label>Nama Toko</label>
+      <input type="text" name="store_name" class="form-control" value="<%= settings ? settings.store_name : '' %>">
+    </div>
+    <div class="mb-3">
+      <label>QR Code Pembayaran</label>
+      <input type="file" name="qr_image" class="form-control" accept="image/*">
+      <% if (settings && settings.qr_image) { %>
+        <img src="<%= settings.qr_image %>" width="150" class="mt-2">
+      <% } %>
+    </div>
+    <button type="submit" class="btn btn-primary">Simpan</button>
+    <a href="/admin/dashboard" class="btn btn-secondary">Kembali</a>
+  </form>
+` }) %>

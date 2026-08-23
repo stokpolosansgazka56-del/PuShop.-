@@ -1,0 +1,30 @@
+<% title = 'Kelola Produk' %>
+<%- include('../layout', { body: `
+  <h1>Kelola Produk</h1>
+  <a href="/admin/products/add" class="btn btn-success mb-3">Tambah Produk</a>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Gambar</th>
+        <th>Nama</th>
+        <th>Harga</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.forEach(p => { %>
+        <tr>
+          <td><img src="<%= p.image_url || '/uploads/default.jpg' %>" width="60" height="60" style="object-fit:cover;"></td>
+          <td><%= p.name %></td>
+          <td>Rp <%= p.price.toLocaleString() %></td>
+          <td>
+            <a href="/admin/products/edit/<%= p.id %>" class="btn btn-sm btn-warning">Edit</a>
+            <form action="/admin/products/<%= p.id %>?_method=DELETE" method="POST" style="display:inline;" onsubmit="return confirm('Yakin hapus?')">
+              <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+` }) %>

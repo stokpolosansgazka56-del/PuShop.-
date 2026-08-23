@@ -1,0 +1,23 @@
+<% title = 'Checkout' %>
+<%- include('layout', { body: `
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Detail Pesanan</h2>
+      <p><strong>Produk:</strong> <%= product.name %></p>
+      <p><strong>Harga:</strong> Rp <%= product.price.toLocaleString() %></p>
+      <p><strong>Pembeli:</strong> <%= user.username %></p>
+      <hr>
+      <p>Silakan scan QR code di samping untuk melakukan pembayaran.</p>
+      <a href="/products" class="btn btn-secondary">Kembali</a>
+    </div>
+    <div class="col-md-6 text-center">
+      <h3>QR Code Pembayaran</h3>
+      <% if (settings && settings.qr_image) { %>
+        <img src="<%= settings.qr_image %>" alt="QR Payment" class="img-fluid" style="max-width:300px;">
+      <% } else { %>
+        <div class="alert alert-warning">Belum ada QR code yang diunggah oleh admin.</div>
+      <% } %>
+      <p class="mt-3">Transfer sesuai nominal di atas.</p>
+    </div>
+  </div>
+` }) %>

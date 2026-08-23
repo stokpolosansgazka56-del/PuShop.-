@@ -1,0 +1,27 @@
+<% title = product ? 'Edit Produk' : 'Tambah Produk' %>
+<%- include('../layout', { body: `
+  <h1><%= product ? 'Edit' : 'Tambah' %> Produk</h1>
+  <form action="/admin/products<%= product ? '/' + product.id + '?_method=PUT' : '' %>" method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label>Nama Produk</label>
+      <input type="text" name="name" class="form-control" value="<%= product ? product.name : '' %>" required>
+    </div>
+    <div class="mb-3">
+      <label>Deskripsi</label>
+      <textarea name="description" class="form-control"><%= product ? product.description : '' %></textarea>
+    </div>
+    <div class="mb-3">
+      <label>Harga (Rp)</label>
+      <input type="number" name="price" class="form-control" value="<%= product ? product.price : '' %>" required>
+    </div>
+    <div class="mb-3">
+      <label>Gambar</label>
+      <input type="file" name="image" class="form-control" accept="image/*">
+      <% if (product && product.image_url) { %>
+        <img src="<%= product.image_url %>" width="100" class="mt-2">
+      <% } %>
+    </div>
+    <button type="submit" class="btn btn-primary">Simpan</button>
+    <a href="/admin/products" class="btn btn-secondary">Batal</a>
+  </form>
+` }) %>

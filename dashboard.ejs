@@ -1,0 +1,27 @@
+<% title = 'Dashboard Admin' %>
+<%- include('../layout', { body: `
+  <h1>Dashboard Admin</h1>
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h5>Total Produk</h5>
+          <h2><%= productCount %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5>Total Pengguna</h5>
+          <h2><%= userCount %></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-4">
+    <a href="/admin/products" class="btn btn-primary">Kelola Produk</a>
+    <a href="/admin/users" class="btn btn-secondary">Kelola Pengguna</a>
+    <a href="/admin/settings" class="btn btn-warning">Pengaturan Toko</a>
+  </div>
+` }) %>
