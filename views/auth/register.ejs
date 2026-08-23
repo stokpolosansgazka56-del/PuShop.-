@@ -1,0 +1,25 @@
+<% title = 'Daftar' %>
+<%- include('../layout', { body: `
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <h2>Daftar Akun</h2>
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+      <form action="/register" method="POST">
+        <div class="mb-3">
+          <label>Username</label>
+          <input type="text" name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label>Konfirmasi Password</label>
+          <input type="password" name="confirm" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success">Daftar</button>
+        <a href="/login" class="btn btn-link">Sudah punya akun? Login</a>
+      </form>
+    </div>
+  </div>
+` }) %>
